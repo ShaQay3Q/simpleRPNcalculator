@@ -18,5 +18,6 @@ func TestParse(t *testing.T) {
 
 	require.Empty(t, parse(""))
 	require.Equal(t, []any{1}, parse("1"))
+	
 	// any -> is a type
 }
