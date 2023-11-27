@@ -32,30 +32,20 @@ func parse(s string) []any {
 		return nil
 	}
 
-	input := []any{}
-
-	/*for i := 0; i < len(s.body); i++ {
-		a := position{x: s.body[i].x, y: s.body[i].y}
-		ret_s.body = append(ret_s.body, a)
-	}*/
+	// array of zero elements
+	output := []any{}
 
 	strArr := strings.Split(s, " ")
 
 	for i := 0; i < len(strArr); i++ {
 		if fl, err := strconv.ParseFloat((strArr[i]), 64); err == nil {
 			//fmt.Println(strArr) // 3.1415927410125732
-			input = append(input, fl)
+			output = append(output, fl) //mlll hotDog jhgjvgj
 		} else {
-			input = append(input, strArr[i])
+			output = append(output, strArr[i])
 		}
 
 		//v := s[i]
 	}
-	return input
+	return output
 }
-
-/*func Float64frombytes(bytes []byte) float64 {
-	bits := binary.LittleEndian.Uint64(bytes)
-	float := math.Float64frombits(bits)
-	return float
-}*/
