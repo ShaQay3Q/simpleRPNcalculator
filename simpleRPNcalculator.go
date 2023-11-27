@@ -1,10 +1,8 @@
 package main
 
 import (
-	"encoding/binary"
-	"fmt"
-	"math"
 	"strconv"
+	"strings"
 )
 
 func main() {
@@ -41,10 +39,14 @@ func parse(s string) []any {
 		ret_s.body = append(ret_s.body, a)
 	}*/
 
-	for i := 0; i < len(s); i = i + 2 {
-		if fl, err := strconv.ParseFloat(string(s[i]), 32); err == nil {
-			fmt.Println(s) // 3.1415927410125732
+	strArr := strings.Split(s, " ")
+
+	for i := 0; i < len(strArr); i++ {
+		if fl, err := strconv.ParseFloat((strArr[i]), 64); err == nil {
+			//fmt.Println(strArr) // 3.1415927410125732
 			input = append(input, fl)
+		} else {
+			input = append(input, strArr[i])
 		}
 
 		//v := s[i]

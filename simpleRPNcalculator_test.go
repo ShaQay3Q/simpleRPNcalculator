@@ -17,7 +17,7 @@ func TestOperation(t *testing.T) {
 func TestParse(t *testing.T) {
 
 	require.Empty(t, parse(""))
-	require.Equal(t, []any{1}, parse("1"))
-	
+	require.Equal(t, []any{1.}, parse("1"))
+	require.Equal(t, []any{17.5, 2.9, "+"}, parse("17.5 2.9 +"))
 	// any -> is a type
 }
