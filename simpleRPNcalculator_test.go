@@ -2,6 +2,7 @@ package main
 
 import (
 	_ "image/png"
+	//"runtime/trace"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -21,3 +22,15 @@ func TestParse(t *testing.T) {
 	require.Equal(t, []any{17.5, 2.9, "+"}, parse("17.5 2.9 +"))
 	// any -> is a type
 }
+
+func TestIsTheStackEmpty(t *testing.T)
+	
+	var s stack
+
+	require.True(t, true, isTheStackEmpty(s))
+	require.False(t, false, isTheStackEmpty())
+
+}
+
+//func TestAddToTheStack(t *testing.T){
+//}
