@@ -23,14 +23,40 @@ func TestParse(t *testing.T) {
 	// any -> is a type
 }
 
-func TestIsTheStackEmpty(t *testing.T)
-	
-	var s stack
+func TestStack(t *testing.T) {
+	s := stack{}
 
-	require.True(t, true, isTheStackEmpty(s))
-	require.False(t, false, isTheStackEmpty())
+	require.Empty(t, s)
+
+	require.True(t, isTheStackEmpty(&s))
+
+	push(&s, 42.3)
+	require.NotEmpty(t, s)
+
+	require.Equal(t, 42.3, pop(&s))
+
+	require.Empty(t, s)
+	require.True(t, isTheStackEmpty(&s))
+
+
+	push(&s, 1.5)
+	push(&s, 2.8)
+	push(&s, 17.1)
+
+	require.Equal(t, 17.1, pop(&s))
+	require.Equal(t, 2.8, pop(&s))
+	require.Equal(t, 1.5, pop(&s))
+
+	require.Empty(t, s)
+	require.True(t, isTheStackEmpty(&s))
+
+
 
 }
+
+// https://go.dev/tour/moretypes/11
+// https://go.dev/tour/moretypes/14
+// https://go.dev/tour/moretypes/15
 
 //func TestAddToTheStack(t *testing.T){
 //}

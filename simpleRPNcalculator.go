@@ -23,24 +23,27 @@ func Operation(x float64, y float64, op string) (i float64) {
 	return
 }
 
-type stack struct {
-	a    float64
-	b    float64
-	oprt string
-}
+type stack []float64
 
 func isTheStackEmpty(s *stack) bool {
-	if s == nil {
-		return true
-	}
-	return false
+	return len(*s) == 0
+}
+
+func push(s *stack, fl float64) {
+
+	*s = append(*s, fl)
+}
+
+func pop(s *stack) float64 {
+
+	i := len(*s) - 1
+	fl := (*s)[i]
+	(*s) = (*s)[:i]
+	return fl
 }
 
 // parse pasre the input string into array of any
 func parse(s string) []any {
-
-	//a := regexp.MustCompile(` `)
-	//b := a.Split(s, -1)
 
 	if len(s) == 0 {
 		return nil
@@ -58,11 +61,6 @@ func parse(s string) []any {
 		} else {
 			output = append(output, strArr[i])
 		}
-
-		//v := s[i]
 	}
 	return output
 }
-
-// l is to find the fist operator's house in the parsed array
-//var l = (len(parse().) + 1) / 2
