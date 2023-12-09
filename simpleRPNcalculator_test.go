@@ -38,7 +38,6 @@ func TestStack(t *testing.T) {
 	require.Empty(t, s)
 	require.True(t, isTheStackEmpty(&s))
 
-
 	push(&s, 1.5)
 	push(&s, 2.8)
 	push(&s, 17.1)
@@ -50,8 +49,18 @@ func TestStack(t *testing.T) {
 	require.Empty(t, s)
 	require.True(t, isTheStackEmpty(&s))
 
+}
 
+func TestInitStack(t *testing.T) {
+	a := []any{1.2, 2.3, "+"}
 
+	require.Equal(t, []float64{1.2, 2.3}, initStack(a))
+}
+
+func TestInitOperator(t *testing.T) {
+	a := []any{1.2, 2.3, "+"}
+
+	require.Equal(t, []string{"+"}, initOperator(a))
 }
 
 // https://go.dev/tour/moretypes/11

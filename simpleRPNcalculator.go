@@ -9,18 +9,20 @@ func main() {
 
 }
 
-func Operation(x float64, y float64, op string) (i float64) {
+func Operation(x float64, y float64, op string) float64 {
+
+	var ret float64
 	switch op {
 	case "+":
-		return x + y
+		ret = x + y
 	case "-":
-		return x - y
+		ret = x - y
 	case "*":
-		return x * y
+		ret = x * y
 	case "/":
-		return x / y
+		ret = x / y
 	}
-	return
+	return ret
 }
 
 type stack []float64
@@ -63,4 +65,36 @@ func parse(s string) []any {
 		}
 	}
 	return output
+}
+
+/*func initStack(a []any) stack {
+	v := reflect.ValueOf(a)
+	v = reflect.Indirect(v)
+
+	var sfl stack
+	for i := 0; i < len(a); i++{
+		if fl, err := float64(a[i]); err == nil {
+			//fmt.Println(strArr) // 3.1415927410125732
+			sfl = append(sfl, fl) //mlll hotDog jhgjvgj
+		}
+	}
+	return sfl
+}*/
+
+func initStack(a []any) []float64 {
+
+	flt := make([]float64, (len(a)+1)/2)
+	for i := 0; i < (len(a)+1)/2; i++ {
+		flt[i] = a[i].(float64)
+	}
+	return flt
+}
+
+func initOperator(a []any) []string {
+
+	str := make([]string, (len(a)-1)/2)
+	for i := (len(a) + 1) / 2; i < len(a); i++ {
+		str[i] = a[i].(string)
+	}
+	return str
 }
