@@ -64,6 +64,9 @@ func TestCalculator(t *testing.T) {
 	require.Equal(t, 27., calculator("3 4 5 + *"))
 
 	require.Equal(t, -10., calculator("3 4 * neg 2 +"))
+
+	require.Equal(t, -48., calculator("2 3 + 4 33 6 summation neg"))
+	require.Equal(t, 0., calculator("summation"))
 }
 
 // https://go.dev/tour/moretypes/11

@@ -80,6 +80,12 @@ func calculator(s string) float64 {
 			if op == "neg" {
 				x := pop(&st)
 				push(&st, -x)
+			} else if op == "summation" {
+				var sum float64
+				for isTheStackEmpty(&st) == false {
+					sum = sum + pop(&st)
+				}
+				push(&st, sum)
 			} else {
 				x := pop(&st)
 				y := pop(&st)
