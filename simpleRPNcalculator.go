@@ -67,35 +67,21 @@ func parse(s string) []any {
 	return output
 }
 
-/*func initStack(a []any) stack {
-	v := reflect.ValueOf(a)
-	v = reflect.Indirect(v)
-
-	var sfl stack
-	for i := 0; i < len(a); i++{
-		if fl, err := float64(a[i]); err == nil {
-			//fmt.Println(strArr) // 3.1415927410125732
-			sfl = append(sfl, fl) //mlll hotDog jhgjvgj
+func calculator(s string) float64 {
+	input := parse(s)
+	st := stack{}
+	for i := 0; i < len(input); i++ {
+		e := input[i]
+		fl, ok := e.(float64)
+		if ok {
+			push(&st, fl)
+		} else {
+			x := pop(&st)
+			y := pop(&st)
+			sum := x + y
+			push(&st, sum)
 		}
 	}
-	return sfl
-}*/
 
-func initStack(a []any) []float64 {
-
-	flt := make([]float64, (len(a)+1)/2)
-	for i := 0; i < (len(a)+1)/2; i++ {
-		flt[i] = a[i].(float64)
-	}
-	return flt
-}
-
-func initOperator(a []any) []string {
-
-	str := make([]string, (len(a)-1)/2)
-	initialIndex := (len(a) + 1) / 2
-	for i := initialIndex; i < len(a); i++ {
-		str[i-initialIndex] = a[i].(string)
-	}
-	return str
+	return pop(&st)
 }

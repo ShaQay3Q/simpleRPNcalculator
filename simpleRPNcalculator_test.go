@@ -51,20 +51,15 @@ func TestStack(t *testing.T) {
 
 }
 
-func TestInitStack(t *testing.T) {
-	a := []any{1.2, 2.3, "+"}
-	b := []any{1.2, 2.3, 3.4, "+", "-"}
+func TestCalculator(t *testing.T) {
 
-	require.Equal(t, []float64{1.2, 2.3}, initStack(a))
-	require.Equal(t, []float64{1.2, 2.3, 3.4}, initStack(b))
-}
+	require.Equal(t, 3., calculator("3"))
+	require.Equal(t, 5., calculator("5"))
+	require.Equal(t, 5.7, calculator("5.7"))
 
-func TestInitOperator(t *testing.T) {
-	a := []any{1.2, 2.3, "+"}
-	b := []any{1.2, 2.3, 3.4, "+", "-"}
-
-	require.Equal(t, []string{"+"}, initOperator(a))
-	require.Equal(t, []string{"+", "-"}, initOperator(b))
+	require.Equal(t, 7., calculator("3 4 +"))
+	require.Equal(t, 12., calculator("3 4 5 + +"))
+	require.Equal(t, 31., calculator("3 4 + 5 + 6 10 + + 3 +"))
 }
 
 // https://go.dev/tour/moretypes/11
