@@ -53,14 +53,18 @@ func TestStack(t *testing.T) {
 
 func TestInitStack(t *testing.T) {
 	a := []any{1.2, 2.3, "+"}
+	b := []any{1.2, 2.3, 3.4, "+", "-"}
 
 	require.Equal(t, []float64{1.2, 2.3}, initStack(a))
+	require.Equal(t, []float64{1.2, 2.3, 3.4}, initStack(b))
 }
 
 func TestInitOperator(t *testing.T) {
 	a := []any{1.2, 2.3, "+"}
+	b := []any{1.2, 2.3, 3.4, "+", "-"}
 
 	require.Equal(t, []string{"+"}, initOperator(a))
+	require.Equal(t, []string{"+", "-"}, initOperator(b))
 }
 
 // https://go.dev/tour/moretypes/11

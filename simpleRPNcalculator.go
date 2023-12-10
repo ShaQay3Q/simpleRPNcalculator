@@ -93,8 +93,9 @@ func initStack(a []any) []float64 {
 func initOperator(a []any) []string {
 
 	str := make([]string, (len(a)-1)/2)
-	for i := (len(a) + 1) / 2; i < len(a); i++ {
-		str[i] = a[i].(string)
+	initialIndex := (len(a) + 1) / 2
+	for i := initialIndex; i < len(a); i++ {
+		str[i-initialIndex] = a[i].(string)
 	}
 	return str
 }
