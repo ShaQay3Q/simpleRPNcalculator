@@ -76,10 +76,17 @@ func calculator(s string) float64 {
 		if ok {
 			push(&st, fl)
 		} else {
-			x := pop(&st)
-			y := pop(&st)
-			sum := x + y
-			push(&st, sum)
+			op, _ := e.(string)
+			if op == "neg" {
+				x := pop(&st)
+				push(&st, -x)
+			} else {
+				x := pop(&st)
+				y := pop(&st)
+				sum := Operation(x, y, op)
+				//sum := x + y
+				push(&st, sum)
+			}
 		}
 	}
 
