@@ -82,7 +82,7 @@ func calculator(s string) float64 {
 				push(&st, -x)
 			} else if op == "summation" {
 				var sum float64
-				for isTheStackEmpty(&st) == false {
+				for !isTheStackEmpty(&st) {
 					sum = sum + pop(&st)
 				}
 				push(&st, sum)
