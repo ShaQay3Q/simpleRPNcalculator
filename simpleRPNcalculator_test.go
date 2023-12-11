@@ -8,13 +8,6 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestOperation(t *testing.T) {
-
-	Operation(3.4, 8.9, "*")
-
-	require.Equal(t, Operation(3.4, 8.9, "*"), 30.26)
-}
-
 func TestParse(t *testing.T) {
 
 	require.Empty(t, parse(""))
@@ -67,6 +60,23 @@ func TestCalculator(t *testing.T) {
 
 	require.Equal(t, -48., calculator("2 3 + 4 33 6 summation neg"))
 	require.Equal(t, 0., calculator("summation"))
+}
+
+func TestOperate(t *testing.T) {
+
+	s1 := stack{3.6}
+	s2 := stack{3.4, 8.9}
+	s3 := stack{3.4, 8.9}
+	s4 := stack{2.4, 4.8}
+	s5 := stack{2., 5.}
+	s6 := stack{1, 2, 3, 4, 5, 6}
+
+	require.Equal(t, -3.6, operate(&s1, "neg"))
+	require.Equal(t, 12.3, operate(&s2, "+"))
+	require.Equal(t, 5.5, operate(&s3, "-"))
+	require.Equal(t, 2., operate(&s4, "/"))
+	require.Equal(t, 10., operate(&s5, "*"))
+	require.Equal(t, 21., operate(&s6, "summation"))
 }
 
 // https://go.dev/tour/moretypes/11

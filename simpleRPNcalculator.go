@@ -9,18 +9,37 @@ func main() {
 
 }
 
-func Operation(x float64, y float64, op string) float64 {
-
+func operate(s *stack, op string) float64 {
 	var ret float64
 	switch op {
+	case "neg":
+		ret = -pop(s)
+		push(s, ret)
 	case "+":
+		x := pop(s)
+		y := pop(s)
 		ret = x + y
+		push(s, ret)
 	case "-":
+		x := pop(s)
+		y := pop(s)
 		ret = x - y
-	case "*":
-		ret = x * y
+		push(s, ret)
 	case "/":
+		x := pop(s)
+		y := pop(s)
 		ret = x / y
+		push(s, ret)
+	case "*":
+		x := pop(s)
+		y := pop(s)
+		ret = x * y
+		push(s, ret)
+	case "summation":
+		for !isTheStackEmpty(s) {
+			ret = ret + pop(s)
+		}
+		push(s, ret)
 	}
 	return ret
 }
@@ -77,22 +96,7 @@ func calculator(s string) float64 {
 			push(&st, fl)
 		} else {
 			op, _ := e.(string)
-			if op == "neg" {
-				x := pop(&st)
-				push(&st, -x)
-			} else if op == "summation" {
-				var sum float64
-				for !isTheStackEmpty(&st) {
-					sum = sum + pop(&st)
-				}
-				push(&st, sum)
-			} else {
-				x := pop(&st)
-				y := pop(&st)
-				sum := Operation(x, y, op)
-				//sum := x + y
-				push(&st, sum)
-			}
+			operate(&st, op)
 		}
 	}
 
