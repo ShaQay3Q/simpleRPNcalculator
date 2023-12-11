@@ -89,8 +89,7 @@ func parse(s string) []any {
 func calculator(s string) float64 {
 	input := parse(s)
 	st := stack{}
-	for i := 0; i < len(input); i++ {
-		e := input[i]
+	for _, e := range input {
 		fl, ok := e.(float64)
 		if ok {
 			push(&st, fl)
