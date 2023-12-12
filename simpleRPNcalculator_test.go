@@ -70,6 +70,8 @@ func TestOperate(t *testing.T) {
 	s4 := stack{2.4, 4.8}
 	s5 := stack{2., 5.}
 	s6 := stack{1, 2, 3, 4, 5, 6}
+	s7 := stack{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+	s8 := stack{2., 5.}
 
 	require.Equal(t, -3.6, operate(&s1, "neg"))
 	require.Equal(t, 12.3, operate(&s2, "+"))
@@ -77,6 +79,12 @@ func TestOperate(t *testing.T) {
 	require.Equal(t, 2., operate(&s4, "/"))
 	require.Equal(t, 10., operate(&s5, "*"))
 	require.Equal(t, 21., operate(&s6, "summation"))
+	// ? is it what you were after?
+	//require.EqualValues(t, 1, 2, 3, operate(&s7, "drop"))
+	require.Equal(t, 9., operate(&s7, "drop"))
+	require.Equal(t, 8, len(s7))
+	require.Equal(t, 5., operate(&s8, "DUP"))
+	require.Equal(t, 3, len(s8))
 }
 
 // https://go.dev/tour/moretypes/11

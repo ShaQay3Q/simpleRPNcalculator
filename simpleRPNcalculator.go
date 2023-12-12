@@ -9,6 +9,7 @@ func main() {
 
 }
 
+// TODO: add 'drop' command and 'DUP' (for dupplication; it is uspposed to dupplicate the last element.
 func operate(s *stack, op string) float64 {
 	var ret float64
 	switch op {
@@ -35,6 +36,15 @@ func operate(s *stack, op string) float64 {
 		y := pop(s)
 		ret = x * y
 		push(s, ret)
+	case "drop":
+		pop(s)
+		x := pop(s)
+		ret = x
+	case "DUP":
+		x := pop(s)
+		push(s, x)
+		push(s, x)
+		ret = x
 	case "summation":
 		for !isTheStackEmpty(s) {
 			ret = ret + pop(s)
