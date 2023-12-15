@@ -62,6 +62,8 @@ func TestCalculator(t *testing.T) {
 	require.Equal(t, 0., calculator("summation"))
 	require.Equal(t, 9., calculator("3 dup *"))
 	require.Equal(t, 5., calculator("2 3 4 drop +"))
+	require.Equal(t, 66., calculator("2 4 3 pwr +"))
+	require.Equal(t, -1., calculator("3 0 pwr neg"))
 }
 
 func TestOperate(t *testing.T) {

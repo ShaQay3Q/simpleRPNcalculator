@@ -38,6 +38,18 @@ func operate(s *stack, op string) {
 			x = x + pop(s)
 		}
 		push(s, x)
+	case "pwr":
+		exponent := pop(s)
+		base := pop(s)
+		res := base
+		if exponent == 0 {
+			res = 1
+		} else {
+			for i := 1.; i < exponent; i++ {
+				res = res * base
+			}
+		}
+		push(s, res)
 	}
 }
 
