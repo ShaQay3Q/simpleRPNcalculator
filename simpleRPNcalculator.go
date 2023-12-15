@@ -10,48 +10,35 @@ func main() {
 }
 
 // TODO: add 'drop' command and 'DUP' (for dupplication; it is uspposed to dupplicate the last element.
-func operate(s *stack, op string) float64 {
-	var ret float64
+func operate(s *stack, op string) {
 	switch op {
 	case "neg":
-		ret = -pop(s)
-		push(s, ret)
+		push(s, -pop(s))
 	case "+":
-		x := pop(s)
-		y := pop(s)
-		ret = x + y
-		push(s, ret)
+		push(s, pop(s)+pop(s))
 	case "-":
 		x := pop(s)
 		y := pop(s)
-		ret = x - y
-		push(s, ret)
+		push(s, x-y)
 	case "/":
 		x := pop(s)
 		y := pop(s)
-		ret = x / y
-		push(s, ret)
+		push(s, x/y)
 	case "*":
-		x := pop(s)
-		y := pop(s)
-		ret = x * y
-		push(s, ret)
+		push(s, pop(s)*pop(s))
 	case "drop":
 		pop(s)
-		x := pop(s)
-		ret = x
-	case "DUP":
+	case "dup":
 		x := pop(s)
 		push(s, x)
 		push(s, x)
-		ret = x
 	case "summation":
+		var x float64
 		for !isTheStackEmpty(s) {
-			ret = ret + pop(s)
+			x = x + pop(s)
 		}
-		push(s, ret)
+		push(s, x)
 	}
-	return ret
 }
 
 type stack []float64
@@ -106,6 +93,7 @@ func calculator(s string) float64 {
 		} else {
 			op, _ := e.(string)
 			operate(&st, op)
+
 		}
 	}
 
