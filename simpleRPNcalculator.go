@@ -1,6 +1,7 @@
 package main
 
 import (
+	"math"
 	"strconv"
 	"strings"
 )
@@ -41,15 +42,17 @@ func operate(s *stack, op string) {
 	case "pwr":
 		exponent := pop(s)
 		base := pop(s)
-		res := base
-		if exponent == 0 {
-			res = 1
-		} else {
-			for i := 1.; i < exponent; i++ {
-				res = res * base
-			}
+		res := 1.
+		absExp := int(math.Abs(exponent))
+		for i := 0; i < absExp; i++ {
+			res = res * base
 		}
+		if exponent < 0 {
+			res = 1. / res
+		}
+
 		push(s, res)
+
 	}
 }
 
