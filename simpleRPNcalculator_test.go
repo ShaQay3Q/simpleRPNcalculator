@@ -71,32 +71,38 @@ func TestCalculator(t *testing.T) {
 func TestOperate(t *testing.T) {
 
 	s1 := stack{3.6}
-	//s2 := stack{3.4, 8.9}
-	//s3 := stack{3.4, 8.9}
-	//s4 := stack{2.4, 4.8}
-	//s5 := stack{2., 5.}
-	//s6 := stack{1, 2, 3, 4, 5, 6}
-	//s7 := stack{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
-	//s8 := stack{2., 5.}
+	s2 := stack{3.4, 8.9}
+	s3 := stack{3.4, 8.9}
+	s4 := stack{2.4, 4.8}
+	s5 := stack{2., 5.}
+	s6 := stack{1, 2, 3, 4, 5, 6}
+	s7 := stack{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+	s8 := stack{2., 5.}
 
 	operate(&s1, "neg")
 	require.Equal(t, stack{-3.6}, s1)
 
-	/*
-		require.Equal(t, -3.6, operate(&s1, "neg"))
-		require.Equal(t, 12.3, operate(&s2, "+"))
-		require.Equal(t, 5.5, operate(&s3, "-"))
-		require.Equal(t, 2., operate(&s4, "/"))
-		require.Equal(t, 10., operate(&s5, "*"))
-		require.Equal(t, 21., operate(&s6, "summation"))
-		// ? is it what you were after?
-		//require.EqualValues(t, 1, 2, 3, operate(&s7, "drop"))
-		require.Equal(t, 9., operate(&s7, "drop"))
-		require.Equal(t, 8, len(s7))
-		require.Equal(t, 5., operate(&s8, "dup"))
-		require.Equal(t, 3, len(s8))
-		require.Equal(t, stack{2, 3}, operate(&stack{2, 3, 4}, "drop"))
-	*/
+	operate(&s2, "+")
+	require.Equal(t, stack{12.3}, s2)
+
+	operate(&s3, "-")
+	require.Equal(t, stack{5.5}, s3)
+
+	operate(&s4, "/")
+	require.Equal(t, stack{2}, s4)
+
+	operate(&s5, "*")
+	require.Equal(t, stack{10}, s5)
+
+	operate(&s6, "summation")
+	require.Equal(t, stack{21}, s6)
+
+	operate(&s7, "drop")
+	require.Equal(t, stack{1, 2, 3, 4, 5, 6, 7, 8, 9}, s7)
+
+	operate(&s8, "dup")
+	require.Equal(t, stack{2, 5, 5}, s8)
+
 }
 
 // https://go.dev/tour/moretypes/11

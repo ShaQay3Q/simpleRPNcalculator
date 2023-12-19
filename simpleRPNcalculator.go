@@ -10,7 +10,7 @@ func main() {
 
 }
 
-// TODO: add 'drop' command and 'DUP' (for dupplication; it is uspposed to dupplicate the last element.
+// operate contains all the operators that the calculator able to call
 func operate(s *stack, op string) {
 	switch op {
 	case "neg":
@@ -50,9 +50,7 @@ func operate(s *stack, op string) {
 		if exponent < 0 {
 			res = 1. / res
 		}
-
 		push(s, res)
-
 	}
 }
 
@@ -81,16 +79,14 @@ func parse(s string) []any {
 	if len(s) == 0 {
 		return nil
 	}
-
 	// array of zero elements
 	output := []any{}
 
 	strArr := strings.Split(s, " ")
 
-	for i := 0; i < len(strArr); i++ {
+	for i := range strArr {
 		if fl, err := strconv.ParseFloat((strArr[i]), 64); err == nil {
-			//fmt.Println(strArr) // 3.1415927410125732
-			output = append(output, fl) //mlll hotDog jhgjvgj
+			output = append(output, fl)
 		} else {
 			output = append(output, strArr[i])
 		}
@@ -98,6 +94,7 @@ func parse(s string) []any {
 	return output
 }
 
+// calculator does the actual calculation job
 func calculator(s string) float64 {
 	input := parse(s)
 	st := stack{}
