@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bytes"
 	_ "image/png"
+
 	//"runtime/trace"
 	"testing"
 
@@ -79,30 +81,40 @@ func TestOperate(t *testing.T) {
 	s7 := stack{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 	s8 := stack{2., 5.}
 
-	operate(&s1, "neg")
+	operate(&s1, "neg", nil)
 	require.Equal(t, stack{-3.6}, s1)
 
-	operate(&s2, "+")
+	operate(&s2, "+", nil)
 	require.Equal(t, stack{12.3}, s2)
 
-	operate(&s3, "-")
+	operate(&s3, "-", nil)
 	require.Equal(t, stack{5.5}, s3)
 
-	operate(&s4, "/")
+	operate(&s4, "/", nil)
 	require.Equal(t, stack{2}, s4)
 
-	operate(&s5, "*")
+	operate(&s5, "*", nil)
 	require.Equal(t, stack{10}, s5)
 
-	operate(&s6, "summation")
+	operate(&s6, "summation", nil)
 	require.Equal(t, stack{21}, s6)
 
-	operate(&s7, "drop")
+	operate(&s7, "drop", nil)
 	require.Equal(t, stack{1, 2, 3, 4, 5, 6, 7, 8, 9}, s7)
 
-	operate(&s8, "dup")
+	operate(&s8, "dup", nil)
 	require.Equal(t, stack{2, 5, 5}, s8)
 
+}
+
+func TestRes(t *testing.T) {
+
+	s := stack{5.}
+
+	var buffer bytes.Buffer
+	operate(&s, "res", &buffer)
+	operate(&s, "res", &buffer)
+	require.Equal(t, ": 5\n: 5\n", buffer.String())
 }
 
 // https://go.dev/tour/moretypes/11

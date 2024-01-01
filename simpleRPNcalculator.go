@@ -1,17 +1,22 @@
 package main
 
 import (
+	"fmt"
+	"io"
 	"math"
+	"os"
 	"strconv"
 	"strings"
 )
 
 func main() {
 
+	input := os.Args[1]
+	calculator(input)
 }
 
 // operate contains all the operators that the calculator able to call
-func operate(s *stack, op string) {
+func operate(s *stack, op string, output io.Writer) {
 	switch op {
 	case "neg":
 		push(s, -pop(s))
@@ -50,6 +55,10 @@ func operate(s *stack, op string) {
 		if exponent < 0 {
 			res = 1. / res
 		}
+		push(s, res)
+	case "res":
+		res := pop(s)
+		fmt.Fprintf(output, ": %v\n", res)
 		push(s, res)
 	}
 }
@@ -104,8 +113,7 @@ func calculator(s string) float64 {
 			push(&st, fl)
 		} else {
 			op, _ := e.(string)
-			operate(&st, op)
-
+			operate(&st, op, os.Stdin)
 		}
 	}
 
