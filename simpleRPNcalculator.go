@@ -16,7 +16,7 @@ func main() {
 }
 
 // operate contains all the operators that the calculator able to call
-func operate(s *stack, op string, output io.Writer) {
+func operate(s *stack, op string, input io.Reader, output io.Writer) {
 	switch op {
 	case "neg":
 		push(s, -pop(s))
@@ -60,6 +60,11 @@ func operate(s *stack, op string, output io.Writer) {
 		res := pop(s)
 		fmt.Fprintf(output, ": %v\n", res)
 		push(s, res)
+	case "read":
+		var fl float64
+		fmt.Fprintf(output, "enter a number> ")
+		fmt.Fscanf(input, "%v", &fl)
+		push(s, fl)
 	}
 }
 
@@ -113,7 +118,7 @@ func calculator(s string) float64 {
 			push(&st, fl)
 		} else {
 			op, _ := e.(string)
-			operate(&st, op, os.Stdin)
+			operate(&st, op, os.Stdin, os.Stdout)
 		}
 	}
 

@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	_ "image/png"
+	"strings"
 
 	//"runtime/trace"
 	"testing"
@@ -81,30 +82,29 @@ func TestOperate(t *testing.T) {
 	s7 := stack{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 	s8 := stack{2., 5.}
 
-	operate(&s1, "neg", nil)
+	operate(&s1, "neg", nil, nil)
 	require.Equal(t, stack{-3.6}, s1)
 
-	operate(&s2, "+", nil)
+	operate(&s2, "+", nil, nil)
 	require.Equal(t, stack{12.3}, s2)
 
-	operate(&s3, "-", nil)
+	operate(&s3, "-", nil, nil)
 	require.Equal(t, stack{5.5}, s3)
 
-	operate(&s4, "/", nil)
+	operate(&s4, "/", nil, nil)
 	require.Equal(t, stack{2}, s4)
 
-	operate(&s5, "*", nil)
+	operate(&s5, "*", nil, nil)
 	require.Equal(t, stack{10}, s5)
 
-	operate(&s6, "summation", nil)
+	operate(&s6, "summation", nil, nil)
 	require.Equal(t, stack{21}, s6)
 
-	operate(&s7, "drop", nil)
+	operate(&s7, "drop", nil, nil)
 	require.Equal(t, stack{1, 2, 3, 4, 5, 6, 7, 8, 9}, s7)
 
-	operate(&s8, "dup", nil)
+	operate(&s8, "dup", nil, nil)
 	require.Equal(t, stack{2, 5, 5}, s8)
-
 }
 
 func TestRes(t *testing.T) {
@@ -112,9 +112,19 @@ func TestRes(t *testing.T) {
 	s := stack{5.}
 
 	var buffer bytes.Buffer
-	operate(&s, "res", &buffer)
-	operate(&s, "res", &buffer)
+	operate(&s, "res", nil, &buffer)
+	operate(&s, "res", nil, &buffer)
 	require.Equal(t, ": 5\n: 5\n", buffer.String())
+}
+
+func TestRead(t *testing.T) {
+	input := strings.NewReader("1.5")
+	var output bytes.Buffer
+	var s stack
+	operate(&s, "read", input, &output)
+	operate(&s, "neg", nil, &output)
+	operate(&s, "res", nil, &output)
+	require.Equal(t, "enter a number> : -1.5\n", output.String())
 }
 
 // https://go.dev/tour/moretypes/11
