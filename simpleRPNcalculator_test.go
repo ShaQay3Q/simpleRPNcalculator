@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	_ "image/png"
+	"os"
 	"strings"
 
 	//"runtime/trace"
@@ -49,25 +50,25 @@ func TestStack(t *testing.T) {
 
 func TestCalculator(t *testing.T) {
 
-	require.Equal(t, 3., calculator("3"))
-	require.Equal(t, 5., calculator("5"))
-	require.Equal(t, 5.7, calculator("5.7"))
+	require.Equal(t, 3., calculator("3", nil))
+	require.Equal(t, 5., calculator("5", nil))
+	require.Equal(t, 5.7, calculator("5.7", nil))
 
-	require.Equal(t, 7., calculator("3 4 +"))
-	require.Equal(t, 12., calculator("3 4 5 + +"))
-	require.Equal(t, 31., calculator("3 4 + 5 + 6 10 + + 3 +"))
-	require.Equal(t, -1., calculator("4 3 -"))
-	require.Equal(t, 27., calculator("3 4 5 + *"))
+	require.Equal(t, 7., calculator("3 4 +", nil))
+	require.Equal(t, 12., calculator("3 4 5 + +", nil))
+	require.Equal(t, 31., calculator("3 4 + 5 + 6 10 + + 3 +", nil))
+	require.Equal(t, -1., calculator("4 3 -", nil))
+	require.Equal(t, 27., calculator("3 4 5 + *", nil))
 
-	require.Equal(t, -10., calculator("3 4 * neg 2 +"))
+	require.Equal(t, -10., calculator("3 4 * neg 2 +", nil))
 
-	require.Equal(t, -48., calculator("2 3 + 4 33 6 summation neg"))
-	require.Equal(t, 0., calculator("summation"))
-	require.Equal(t, 9., calculator("3 dup *"))
-	require.Equal(t, 5., calculator("2 3 4 drop +"))
-	require.Equal(t, 66., calculator("2 4 3 pwr +"))
-	require.Equal(t, -1., calculator("3 0 pwr neg"))
-	require.Equal(t, (1. / 64), calculator("4 -3 pwr"))
+	require.Equal(t, -48., calculator("2 3 + 4 33 6 summation neg", nil))
+	require.Equal(t, 0., calculator("summation", nil))
+	require.Equal(t, 9., calculator("3 dup *", nil))
+	require.Equal(t, 5., calculator("2 3 4 drop +", nil))
+	require.Equal(t, 66., calculator("2 4 3 pwr +", nil))
+	require.Equal(t, -1., calculator("3 0 pwr neg", nil))
+	require.Equal(t, (1. / 64), calculator("4 -3 pwr", nil))
 
 }
 
@@ -107,14 +108,14 @@ func TestOperate(t *testing.T) {
 	require.Equal(t, stack{2, 5, 5}, s8)
 }
 
-func TestRes(t *testing.T) {
+func TestPrintIt(t *testing.T) {
 
 	s := stack{5.}
 
-	var buffer bytes.Buffer
-	operate(&s, "res", nil, &buffer)
-	operate(&s, "res", nil, &buffer)
-	require.Equal(t, ": 5\n: 5\n", buffer.String())
+	var output bytes.Buffer
+	operate(&s, "printIt", nil, &output)
+	operate(&s, "printIt", nil, &output)
+	require.Equal(t, ": 5\n: 5\n", output.String())
 }
 
 func TestRead(t *testing.T) {
@@ -123,8 +124,47 @@ func TestRead(t *testing.T) {
 	var s stack
 	operate(&s, "read", input, &output)
 	operate(&s, "neg", nil, &output)
-	operate(&s, "res", nil, &output)
+	operate(&s, "printIt", nil, &output)
 	require.Equal(t, "enter a number> : -1.5\n", output.String())
+}
+
+func TestReadFromFile001(t *testing.T) {
+
+	file, _ := os.Open("./test-files/001.txt")
+	defer file.Close()
+
+	var output bytes.Buffer
+
+	calculateFromFile(file, &output)
+
+	require.Equal(t, ": 10\n", output.String())
+
+}
+
+func TestReadFromFile002(t *testing.T) {
+
+	file, _ := os.Open("./test-files/002.txt")
+	defer file.Close()
+
+	var output bytes.Buffer
+
+	calculateFromFile(file, &output)
+
+	require.Equal(t, ": -16\n", output.String())
+
+}
+
+func TestReadFromFile003(t *testing.T) {
+
+	file, _ := os.Open("./test-files/003.txt")
+	defer file.Close()
+
+	var output bytes.Buffer
+
+	calculateFromFile(file, &output)
+
+	require.Equal(t, ": 3\n: 3\n", output.String())
+
 }
 
 // https://go.dev/tour/moretypes/11

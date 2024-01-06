@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io"
+	"io/ioutil"
 	"math"
 	"os"
 	"strconv"
@@ -12,7 +13,7 @@ import (
 func main() {
 
 	input := os.Args[1]
-	calculator(input)
+	calculator(input, nil)
 }
 
 // operate contains all the operators that the calculator able to call
@@ -56,10 +57,12 @@ func operate(s *stack, op string, input io.Reader, output io.Writer) {
 			res = 1. / res
 		}
 		push(s, res)
-	case "res":
-		res := pop(s)
-		fmt.Fprintf(output, ": %v\n", res)
-		push(s, res)
+		// printIt supposed to print to a standard output
+	case "printIt":
+		topValue := pop(s)
+		fmt.Fprintf(output, ": %v\n", topValue)
+		push(s, topValue)
+		// read supposed to read a number form a standard input
 	case "read":
 		var fl float64
 		fmt.Fprintf(output, "enter a number> ")
@@ -109,7 +112,7 @@ func parse(s string) []any {
 }
 
 // calculator does the actual calculation job
-func calculator(s string) float64 {
+func calculator(s string, write io.Writer) float64 {
 	input := parse(s)
 	st := stack{}
 	for _, e := range input {
@@ -118,9 +121,16 @@ func calculator(s string) float64 {
 			push(&st, fl)
 		} else {
 			op, _ := e.(string)
-			operate(&st, op, os.Stdin, os.Stdout)
+			operate(&st, op, os.Stdin, write)
 		}
 	}
 
 	return pop(&st)
+}
+
+func calculateFromFile(f *os.File, output io.Writer) {
+	fileContent, _ := ioutil.ReadAll(f)
+
+	s := string(fileContent)
+	calculator(s, output)
 }
