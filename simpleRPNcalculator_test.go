@@ -48,27 +48,27 @@ func TestStack(t *testing.T) {
 
 }
 
-func TestCalculator(t *testing.T) {
+func TestCalculate(t *testing.T) {
 
-	require.Equal(t, 3., calculator("3", nil))
-	require.Equal(t, 5., calculator("5", nil))
-	require.Equal(t, 5.7, calculator("5.7", nil))
+	require.Equal(t, 3., calculate("3", nil))
+	require.Equal(t, 5., calculate("5", nil))
+	require.Equal(t, 5.7, calculate("5.7", nil))
 
-	require.Equal(t, 7., calculator("3 4 +", nil))
-	require.Equal(t, 12., calculator("3 4 5 + +", nil))
-	require.Equal(t, 31., calculator("3 4 + 5 + 6 10 + + 3 +", nil))
-	require.Equal(t, -1., calculator("4 3 -", nil))
-	require.Equal(t, 27., calculator("3 4 5 + *", nil))
+	require.Equal(t, 7., calculate("3 4 +", nil))
+	require.Equal(t, 12., calculate("3 4 5 + +", nil))
+	require.Equal(t, 31., calculate("3 4 + 5 + 6 10 + + 3 +", nil))
+	require.Equal(t, -1., calculate("4 3 -", nil))
+	require.Equal(t, 27., calculate("3 4 5 + *", nil))
 
-	require.Equal(t, -10., calculator("3 4 * neg 2 +", nil))
+	require.Equal(t, -10., calculate("3 4 * neg 2 +", nil))
 
-	require.Equal(t, -48., calculator("2 3 + 4 33 6 summation neg", nil))
-	require.Equal(t, 0., calculator("summation", nil))
-	require.Equal(t, 9., calculator("3 dup *", nil))
-	require.Equal(t, 5., calculator("2 3 4 drop +", nil))
-	require.Equal(t, 66., calculator("2 4 3 pwr +", nil))
-	require.Equal(t, -1., calculator("3 0 pwr neg", nil))
-	require.Equal(t, (1. / 64), calculator("4 -3 pwr", nil))
+	require.Equal(t, -48., calculate("2 3 + 4 33 6 summation neg", nil))
+	require.Equal(t, 0., calculate("summation", nil))
+	require.Equal(t, 9., calculate("3 dup *", nil))
+	require.Equal(t, 5., calculate("2 3 4 drop +", nil))
+	require.Equal(t, 66., calculate("2 4 3 pwr +", nil))
+	require.Equal(t, -1., calculate("3 0 pwr neg", nil))
+	require.Equal(t, (1. / 64), calculate("4 -3 pwr", nil))
 
 }
 

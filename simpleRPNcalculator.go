@@ -13,7 +13,7 @@ import (
 func main() {
 
 	input := os.Args[1]
-	calculator(input, nil)
+	calculate(input, nil)
 }
 
 // operate contains all the operators that the calculator able to call
@@ -111,8 +111,8 @@ func parse(s string) []any {
 	return output
 }
 
-// calculator does the actual calculation job
-func calculator(s string, write io.Writer) float64 {
+// calculate does the actual calculation job
+func calculate(s string, output io.Writer) float64 {
 	input := parse(s)
 	st := stack{}
 	for _, e := range input {
@@ -121,7 +121,7 @@ func calculator(s string, write io.Writer) float64 {
 			push(&st, fl)
 		} else {
 			op, _ := e.(string)
-			operate(&st, op, os.Stdin, write)
+			operate(&st, op, os.Stdin, output)
 		}
 	}
 
@@ -132,5 +132,5 @@ func calculateFromFile(f *os.File, output io.Writer) {
 	fileContent, _ := ioutil.ReadAll(f)
 
 	s := string(fileContent)
-	calculator(s, output)
+	calculate(s, output)
 }
