@@ -12,8 +12,10 @@ import (
 
 func main() {
 
-	input := os.Args[1]
-	calculate(input, nil)
+	file, _ := os.Open(os.Args[1])
+	defer file.Close()
+
+	calculateFromFile(file, os.Stdin, os.Stdout)
 }
 
 // operate contains all the operators that the calculator able to call
@@ -112,25 +114,25 @@ func parse(s string) []any {
 }
 
 // calculate does the actual calculation job
-func calculate(s string, output io.Writer) float64 {
-	input := parse(s)
+func calculate(s string, input io.Reader, output io.Writer) float64 {
+	parsedInput := parse(s)
 	st := stack{}
-	for _, e := range input {
+	for _, e := range parsedInput {
 		fl, ok := e.(float64)
 		if ok {
 			push(&st, fl)
 		} else {
 			op, _ := e.(string)
-			operate(&st, op, os.Stdin, output)
+			operate(&st, op, input, output)
 		}
 	}
 
 	return pop(&st)
 }
 
-func calculateFromFile(f *os.File, output io.Writer) {
+func calculateFromFile(f *os.File, input io.Reader, output io.Writer) {
 	fileContent, _ := ioutil.ReadAll(f)
 
 	s := string(fileContent)
-	calculate(s, output)
+	calculate(s, input, output)
 }
