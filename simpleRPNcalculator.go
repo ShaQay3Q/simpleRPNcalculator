@@ -130,8 +130,8 @@ func calculate(s string, input io.Reader, output io.Writer) float64 {
 	return pop(&st)
 }
 
-func calculateFromFile(f *os.File, input io.Reader, output io.Writer) {
-	fileContent, _ := ioutil.ReadAll(f)
+func calculateFromFile(reader io.Reader, input io.Reader, output io.Writer) {
+	fileContent, _ := ioutil.ReadAll(reader)
 
 	s := string(fileContent)
 	calculate(s, input, output)
