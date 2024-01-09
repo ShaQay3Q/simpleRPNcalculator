@@ -10,6 +10,7 @@ import (
 	"strings"
 )
 
+// main is the enterypoint of this program
 func main() {
 
 	file, _ := os.Open(os.Args[1])
@@ -19,58 +20,105 @@ func main() {
 }
 
 // operate contains all the operators that the calculator able to call
+// operate choses an operation and execcutes/calls it
 func operate(s *stack, op string, input io.Reader, output io.Writer) {
 	switch op {
 	case "neg":
-		push(s, -pop(s))
+		negOperator(s)
 	case "+":
-		push(s, pop(s)+pop(s))
+		sumOperator(s)
 	case "-":
-		x := pop(s)
-		y := pop(s)
-		push(s, x-y)
+		minusOperator(s)
 	case "/":
-		x := pop(s)
-		y := pop(s)
-		push(s, x/y)
+		divisionOperator(s)
 	case "*":
-		push(s, pop(s)*pop(s))
+		multipicationOperator(s)
 	case "drop":
-		pop(s)
+		dropOperator(s)
 	case "dup":
-		x := pop(s)
-		push(s, x)
-		push(s, x)
+		duplicateOperator(s)
 	case "summation":
-		var x float64
-		for !isTheStackEmpty(s) {
-			x = x + pop(s)
-		}
-		push(s, x)
+		summationOperator(s)
 	case "pwr":
-		exponent := pop(s)
-		base := pop(s)
-		res := 1.
-		absExp := int(math.Abs(exponent))
-		for i := 0; i < absExp; i++ {
-			res = res * base
-		}
-		if exponent < 0 {
-			res = 1. / res
-		}
-		push(s, res)
+		powerOperator(s)
 		// printIt supposed to print to a standard output
 	case "printIt":
-		topValue := pop(s)
-		fmt.Fprintf(output, ": %v\n", topValue)
-		push(s, topValue)
+		writeOperator(s, output)
 		// read supposed to read a number form a standard input
 	case "read":
-		var fl float64
-		fmt.Fprintf(output, "enter a number> ")
-		fmt.Fscanf(input, "%v", &fl)
-		push(s, fl)
+		readOperator(output, input, s)
 	}
+}
+
+func readOperator(output io.Writer, input io.Reader, s *stack) {
+	var fl float64
+	fmt.Fprintf(output, "enter a number> ")
+	fmt.Fscanf(input, "%v", &fl)
+	push(s, fl)
+}
+
+func writeOperator(s *stack, output io.Writer) {
+	topValue := pop(s)
+	fmt.Fprintf(output, ": %v\n", topValue)
+	push(s, topValue)
+}
+
+func powerOperator(s *stack) {
+	exponent := pop(s)
+	base := pop(s)
+	res := 1.
+	absExp := int(math.Abs(exponent))
+	for i := 0; i < absExp; i++ {
+		res = res * base
+	}
+	if exponent < 0 {
+		res = 1. / res
+	}
+	push(s, res)
+}
+
+func summationOperator(s *stack) {
+	var x float64
+	for !isTheStackEmpty(s) {
+		x = x + pop(s)
+	}
+	push(s, x)
+}
+
+func duplicateOperator(s *stack) {
+	x := pop(s)
+	push(s, x)
+	push(s, x)
+}
+
+func dropOperator(s *stack) {
+	pop(s)
+}
+
+func multipicationOperator(s *stack) {
+	push(s, pop(s)*pop(s))
+}
+
+func divisionOperator(s *stack) {
+	x := pop(s)
+	y := pop(s)
+	push(s, x/y)
+}
+
+func minusOperator(s *stack) {
+	x := pop(s)
+	y := pop(s)
+	push(s, x-y)
+}
+
+// negOperator negates the latest number in the stack
+func negOperator(s *stack) {
+	push(s, -pop(s))
+}
+
+// sumOperator sum two numebrs together
+func sumOperator(s *stack) {
+	push(s, pop(s)+pop(s))
 }
 
 type stack []float64
@@ -113,7 +161,7 @@ func parse(s string) []any {
 	return output
 }
 
-// calculate does the actual calculation job
+// calculate does the actual calculation job, calculate
 func calculate(s string, input io.Reader, output io.Writer) float64 {
 	parsedInput := parse(s)
 	st := stack{}
