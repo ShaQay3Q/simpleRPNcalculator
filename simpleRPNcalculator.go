@@ -19,51 +19,47 @@ func main() {
 	calculateFromFile(file, os.Stdin, os.Stdout)
 }
 
-// operate contains all the operators that the calculator able to call
-// operate choses an operation and execcutes/calls it
-func operate(s *stack, op string, input io.Reader, output io.Writer) {
-	switch op {
-	case "neg":
-		negOperator(s)
-	case "+":
-		sumOperator(s)
-	case "-":
-		minusOperator(s)
-	case "/":
-		divisionOperator(s)
-	case "*":
-		multipicationOperator(s)
-	case "drop":
-		dropOperator(s)
-	case "dup":
-		duplicateOperator(s)
-	case "summation":
-		summationOperator(s)
-	case "pwr":
-		powerOperator(s)
-		// printIt supposed to print to a standard output
-	case "printIt":
-		writeOperator(s, output)
-		// read supposed to read a number form a standard input
-	case "read":
-		readOperator(output, input, s)
-	}
+var operations = map[string]func(*stack, io.Reader, io.Writer){
+	"neg":       negOperator,
+	"+":         sumOperator,
+	"-":         minusOperator,
+	"/":         divisionOperator,
+	"*":         multipicationOperator,
+	"drop":      dropOperator,
+	"dup":       duplicateOperator,
+	"summation": summationOperator,
+	"pwr":       powerOperator,
+	"printIt":   writeOperator,
+	"read":      readOperator,
 }
 
-func readOperator(output io.Writer, input io.Reader, s *stack) {
+// operate contains all the operators that the calculator able to call
+// operate choses an operation and execcutes/calls it
+// its is refactored
+func operate(s *stack, op string, input io.Reader, output io.Writer) {
+
+	operation, ok := operations[op]
+
+	if ok {
+		operation(s, input, output)
+	}
+
+}
+
+func readOperator(s *stack, input io.Reader, output io.Writer) {
 	var fl float64
 	fmt.Fprintf(output, "enter a number> ")
 	fmt.Fscanf(input, "%v", &fl)
 	push(s, fl)
 }
 
-func writeOperator(s *stack, output io.Writer) {
+func writeOperator(s *stack, input io.Reader, output io.Writer) {
 	topValue := pop(s)
 	fmt.Fprintf(output, ": %v\n", topValue)
 	push(s, topValue)
 }
 
-func powerOperator(s *stack) {
+func powerOperator(s *stack, input io.Reader, output io.Writer) {
 	exponent := pop(s)
 	base := pop(s)
 	res := 1.
@@ -77,7 +73,7 @@ func powerOperator(s *stack) {
 	push(s, res)
 }
 
-func summationOperator(s *stack) {
+func summationOperator(s *stack, input io.Reader, output io.Writer) {
 	var x float64
 	for !isTheStackEmpty(s) {
 		x = x + pop(s)
@@ -85,39 +81,39 @@ func summationOperator(s *stack) {
 	push(s, x)
 }
 
-func duplicateOperator(s *stack) {
+func duplicateOperator(s *stack, input io.Reader, output io.Writer) {
 	x := pop(s)
 	push(s, x)
 	push(s, x)
 }
 
-func dropOperator(s *stack) {
+func dropOperator(s *stack, input io.Reader, output io.Writer) {
 	pop(s)
 }
 
-func multipicationOperator(s *stack) {
+func multipicationOperator(s *stack, input io.Reader, output io.Writer) {
 	push(s, pop(s)*pop(s))
 }
 
-func divisionOperator(s *stack) {
+func divisionOperator(s *stack, input io.Reader, output io.Writer) {
 	x := pop(s)
 	y := pop(s)
 	push(s, x/y)
 }
 
-func minusOperator(s *stack) {
+func minusOperator(s *stack, input io.Reader, output io.Writer) {
 	x := pop(s)
 	y := pop(s)
 	push(s, x-y)
 }
 
 // negOperator negates the latest number in the stack
-func negOperator(s *stack) {
+func negOperator(s *stack, input io.Reader, output io.Writer) {
 	push(s, -pop(s))
 }
 
 // sumOperator sum two numebrs together
-func sumOperator(s *stack) {
+func sumOperator(s *stack, input io.Reader, output io.Writer) {
 	push(s, pop(s)+pop(s))
 }
 
