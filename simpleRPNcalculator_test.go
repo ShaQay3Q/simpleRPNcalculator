@@ -241,6 +241,23 @@ func TestReadFromFile005(t *testing.T) {
 	require.Equal(t, ErrDivisionByZero, err)
 }
 
+func FuzzCalculate(f *testing.F) {
+	testcases := []string{
+		"3 4 + 5 + 6 10 + + 3 +",
+		"3 4 5 + +",
+		"3 0 pwr neg",
+		"3 dup *",
+		"0 17 / printIt",
+	}
+	for _, tc := range testcases {
+		f.Add(tc) // Use f.Add to provide a seed corpus
+	}
+	f.Fuzz(func(t *testing.T, a string) {
+		var output bytes.Buffer
+		_, _ = calculate(a, nil, &output)
+	})
+}
+
 // https://go.dev/tour/moretypes/11
 // https://go.dev/tour/moretypes/14
 // https://go.dev/tour/moretypes/15
