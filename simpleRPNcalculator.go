@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -19,7 +20,7 @@ func main() {
 	calculateFromFile(file, os.Stdin, os.Stdout)
 }
 
-var operations = map[string]func(*stack, io.Reader, io.Writer){
+var operations = map[string]func(*stack, io.Reader, io.Writer) error{
 	"neg":       negOperator,
 	"+":         sumOperator,
 	"-":         minusOperator,
@@ -36,30 +37,33 @@ var operations = map[string]func(*stack, io.Reader, io.Writer){
 // operate contains all the operators that the calculator able to call
 // operate choses an operation and execcutes/calls it
 // its is refactored
-func operate(s *stack, op string, input io.Reader, output io.Writer) {
+func operate(s *stack, op string, input io.Reader, output io.Writer) error {
 
 	operation, ok := operations[op]
 
 	if ok {
-		operation(s, input, output)
+		err := operation(s, input, output)
+		return err
 	}
-
+	return nil
 }
 
-func readOperator(s *stack, input io.Reader, output io.Writer) {
+func readOperator(s *stack, input io.Reader, output io.Writer) error {
 	var fl float64
 	fmt.Fprintf(output, "enter a number> ")
 	fmt.Fscanf(input, "%v", &fl)
 	push(s, fl)
+	return nil
 }
 
-func writeOperator(s *stack, input io.Reader, output io.Writer) {
+func writeOperator(s *stack, input io.Reader, output io.Writer) error {
 	topValue := pop(s)
 	fmt.Fprintf(output, ": %v\n", topValue)
 	push(s, topValue)
+	return nil
 }
 
-func powerOperator(s *stack, input io.Reader, output io.Writer) {
+func powerOperator(s *stack, input io.Reader, output io.Writer) error {
 	exponent := pop(s)
 	base := pop(s)
 	res := 1.
@@ -71,50 +75,74 @@ func powerOperator(s *stack, input io.Reader, output io.Writer) {
 		res = 1. / res
 	}
 	push(s, res)
+
+	return nil
 }
 
-func summationOperator(s *stack, input io.Reader, output io.Writer) {
+func summationOperator(s *stack, input io.Reader, output io.Writer) error {
 	var x float64
 	for !isTheStackEmpty(s) {
 		x = x + pop(s)
 	}
 	push(s, x)
+
+	return nil
 }
 
-func duplicateOperator(s *stack, input io.Reader, output io.Writer) {
+func duplicateOperator(s *stack, input io.Reader, output io.Writer) error {
 	x := pop(s)
 	push(s, x)
 	push(s, x)
+
+	return nil
 }
 
-func dropOperator(s *stack, input io.Reader, output io.Writer) {
+func dropOperator(s *stack, input io.Reader, output io.Writer) error {
 	pop(s)
+
+	return nil
 }
 
-func multipicationOperator(s *stack, input io.Reader, output io.Writer) {
+func multipicationOperator(s *stack, input io.Reader, output io.Writer) error {
 	push(s, pop(s)*pop(s))
+
+	return nil
 }
 
-func divisionOperator(s *stack, input io.Reader, output io.Writer) {
+func divisionOperator(s *stack, input io.Reader, output io.Writer) error {
 	x := pop(s)
 	y := pop(s)
+	if y == 0 {
+		push(s, y)
+		push(s, x)
+		return ErrDivisionByZero
+	}
+
 	push(s, x/y)
+
+	return nil
 }
 
-func minusOperator(s *stack, input io.Reader, output io.Writer) {
+func minusOperator(s *stack, input io.Reader, output io.Writer) error {
 	x := pop(s)
 	y := pop(s)
 	push(s, x-y)
+
+	return nil
 }
 
 // negOperator negates the latest number in the stack
-func negOperator(s *stack, input io.Reader, output io.Writer) {
+func negOperator(s *stack, input io.Reader, output io.Writer) error {
 	push(s, -pop(s))
+
+	return nil
 }
 
 // sumOperator sum two numebrs together
-func sumOperator(s *stack, input io.Reader, output io.Writer) {
+func sumOperator(s *stack, input io.Reader, output io.Writer) error {
 	push(s, pop(s)+pop(s))
+
+	return nil
 }
 
 type stack []float64
@@ -158,7 +186,8 @@ func parse(s string) []any {
 }
 
 // calculate does the actual calculation job, calculate
-func calculate(s string, input io.Reader, output io.Writer) float64 {
+func calculate(s string, input io.Reader, output io.Writer) (float64, error) {
+
 	parsedInput := parse(s)
 	st := stack{}
 	for _, e := range parsedInput {
@@ -167,16 +196,22 @@ func calculate(s string, input io.Reader, output io.Writer) float64 {
 			push(&st, fl)
 		} else {
 			op, _ := e.(string)
-			operate(&st, op, input, output)
+			err := operate(&st, op, input, output)
+			if err != nil {
+				return 0, err
+			}
 		}
 	}
 
-	return pop(&st)
+	return pop(&st), nil
 }
 
-func calculateFromFile(reader io.Reader, input io.Reader, output io.Writer) {
+func calculateFromFile(reader io.Reader, input io.Reader, output io.Writer) error {
 	fileContent, _ := ioutil.ReadAll(reader)
 
 	s := string(fileContent)
-	calculate(s, input, output)
+	_, err := calculate(s, input, output)
+	return err
 }
+
+var ErrDivisionByZero = errors.New("Cannot divide by zero")

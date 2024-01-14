@@ -50,25 +50,54 @@ func TestStack(t *testing.T) {
 
 func TestCalculate(t *testing.T) {
 
-	require.Equal(t, 3., calculate("3", nil, nil))
-	require.Equal(t, 5., calculate("5", nil, nil))
-	require.Equal(t, 5.7, calculate("5.7", nil, nil))
+	fl, _ := calculate("3", nil, nil)
 
-	require.Equal(t, 7., calculate("3 4 +", nil, nil))
-	require.Equal(t, 12., calculate("3 4 5 + +", nil, nil))
-	require.Equal(t, 31., calculate("3 4 + 5 + 6 10 + + 3 +", nil, nil))
-	require.Equal(t, -1., calculate("4 3 -", nil, nil))
-	require.Equal(t, 27., calculate("3 4 5 + *", nil, nil))
+	require.Equal(t, 3., fl)
 
-	require.Equal(t, -10., calculate("3 4 * neg 2 +", nil, nil))
+	fl, _ = calculate("5", nil, nil)
+	require.Equal(t, 5., fl)
 
-	require.Equal(t, -48., calculate("2 3 + 4 33 6 summation neg", nil, nil))
-	require.Equal(t, 0., calculate("summation", nil, nil))
-	require.Equal(t, 9., calculate("3 dup *", nil, nil))
-	require.Equal(t, 5., calculate("2 3 4 drop +", nil, nil))
-	require.Equal(t, 66., calculate("2 4 3 pwr +", nil, nil))
-	require.Equal(t, -1., calculate("3 0 pwr neg", nil, nil))
-	require.Equal(t, (1. / 64), calculate("4 -3 pwr", nil, nil))
+	fl, _ = calculate("5.7", nil, nil)
+	require.Equal(t, 5.7, fl)
+
+	fl, _ = calculate("3 4 +", nil, nil)
+	require.Equal(t, 7., fl)
+
+	fl, _ = calculate("3 4 5 + +", nil, nil)
+	require.Equal(t, 12., fl)
+
+	fl, _ = calculate("3 4 + 5 + 6 10 + + 3 +", nil, nil)
+	require.Equal(t, 31., fl)
+
+	fl, _ = calculate("4 3 -", nil, nil)
+	require.Equal(t, -1., fl)
+
+	fl, _ = calculate("3 4 5 + *", nil, nil)
+	require.Equal(t, 27., fl)
+
+	fl, _ = calculate("3 4 * neg 2 +", nil, nil)
+	require.Equal(t, -10., fl)
+
+	fl, _ = calculate("2 3 + 4 33 6 summation neg", nil, nil)
+	require.Equal(t, -48., fl)
+
+	fl, _ = calculate("summation", nil, nil)
+	require.Equal(t, 0., fl)
+
+	fl, _ = calculate("3 dup *", nil, nil)
+	require.Equal(t, 9., fl)
+
+	fl, _ = calculate("2 3 4 drop +", nil, nil)
+	require.Equal(t, 5., fl)
+
+	fl, _ = calculate("2 4 3 pwr +", nil, nil)
+	require.Equal(t, 66., fl)
+
+	fl, _ = calculate("3 0 pwr neg", nil, nil)
+	require.Equal(t, -1., fl)
+
+	fl, _ = calculate("4 -3 pwr", nil, nil)
+	require.Equal(t, (1. / 64), fl)
 
 }
 
@@ -135,8 +164,9 @@ func TestReadFromFile001(t *testing.T) {
 
 	var output bytes.Buffer
 
-	calculateFromFile(file, nil, &output)
+	err := calculateFromFile(file, nil, &output)
 
+	require.Nil(t, err)
 	require.Equal(t, ": 10\n", output.String())
 
 }
@@ -148,8 +178,9 @@ func TestReadFromFile002(t *testing.T) {
 
 	var output bytes.Buffer
 
-	calculateFromFile(file, nil, &output)
+	err := calculateFromFile(file, nil, &output)
 
+	require.Nil(t, err)
 	require.Equal(t, ": -16\n", output.String())
 
 }
@@ -161,8 +192,9 @@ func TestReadFromFile003(t *testing.T) {
 
 	var output bytes.Buffer
 
-	calculateFromFile(file, nil, &output)
+	err := calculateFromFile(file, nil, &output)
 
+	require.Nil(t, err)
 	require.Equal(t, ": 3\n: 3\n", output.String())
 
 }
@@ -175,13 +207,24 @@ func TestReadFromFile004(t *testing.T) {
 	//passing the variable instead f typing it in terminal
 	input := strings.NewReader("40")
 
-	calculateFromFile(file, input, &output)
+	err := calculateFromFile(file, input, &output)
+
+	require.Nil(t, err)
 	require.Equal(t, "enter a number> : -40\n", output.String())
+}
+
+func TestReadFromFile005(t *testing.T) {
+	file, _ := os.Open("./test-files/005.txt")
+	defer file.Close()
+
+	var output bytes.Buffer
+
+	err := calculateFromFile(file, nil, &output)
+
+	require.NotNil(t, err)
+	require.Equal(t, ErrDivisionByZero, err)
 }
 
 // https://go.dev/tour/moretypes/11
 // https://go.dev/tour/moretypes/14
 // https://go.dev/tour/moretypes/15
-
-//func TestAddToTheStack(t *testing.T){
-//}
