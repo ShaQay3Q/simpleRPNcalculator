@@ -39,8 +39,8 @@ func TestStack(t *testing.T) {
 	push(&s, 2.8)
 	push(&s, 17.1)
 
-	require.Equal(t, 17.1, pop(&s))
-	require.Equal(t, 2.8, pop(&s))
+	require.InEpsilon(t, 17.1, pop(&s), 0.001)
+	require.InDelta(t, 2.8, pop(&s), 0.001)
 	require.Equal(t, 1.5, pop(&s))
 
 	require.Empty(t, s)
@@ -112,28 +112,39 @@ func TestOperate(t *testing.T) {
 	s7 := stack{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 	s8 := stack{2., 5.}
 
-	operate(&s1, "neg", nil, nil)
+	err := operate(&s1, "neg", nil, nil)
+
+	require.Nil(t, err)
 	require.Equal(t, stack{-3.6}, s1)
 
-	operate(&s2, "+", nil, nil)
+	err = operate(&s2, "+", nil, nil)
+
+	require.Nil(t, err)
 	require.Equal(t, stack{12.3}, s2)
 
-	operate(&s3, "-", nil, nil)
+	err = operate(&s3, "-", nil, nil)
+
+	require.Nil(t, err)
 	require.Equal(t, stack{5.5}, s3)
 
-	operate(&s4, "/", nil, nil)
+	err = operate(&s4, "/", nil, nil)
+	require.Nil(t, err)
 	require.Equal(t, stack{2}, s4)
 
-	operate(&s5, "*", nil, nil)
+	err = operate(&s5, "*", nil, nil)
+	require.Nil(t, err)
 	require.Equal(t, stack{10}, s5)
 
-	operate(&s6, "summation", nil, nil)
+	err = operate(&s6, "summation", nil, nil)
+	require.Nil(t, err)
 	require.Equal(t, stack{21}, s6)
 
-	operate(&s7, "drop", nil, nil)
+	err = operate(&s7, "drop", nil, nil)
+	require.Nil(t, err)
 	require.Equal(t, stack{1, 2, 3, 4, 5, 6, 7, 8, 9}, s7)
 
-	operate(&s8, "dup", nil, nil)
+	err = operate(&s8, "dup", nil, nil)
+	require.Nil(t, err)
 	require.Equal(t, stack{2, 5, 5}, s8)
 }
 
@@ -142,8 +153,10 @@ func TestPrintIt(t *testing.T) {
 	s := stack{5.}
 
 	var output bytes.Buffer
-	operate(&s, "printIt", nil, &output)
-	operate(&s, "printIt", nil, &output)
+	err := operate(&s, "printIt", nil, &output)
+	require.Nil(t, err)
+	err = operate(&s, "printIt", nil, &output)
+	require.Nil(t, err)
 	require.Equal(t, ": 5\n: 5\n", output.String())
 }
 
@@ -151,9 +164,12 @@ func TestRead(t *testing.T) {
 	input := strings.NewReader("1.5")
 	var output bytes.Buffer
 	var s stack
-	operate(&s, "read", input, &output)
-	operate(&s, "neg", nil, nil)
-	operate(&s, "printIt", nil, &output)
+	err := operate(&s, "read", input, &output)
+	require.Nil(t, err)
+	err = operate(&s, "neg", nil, nil)
+	require.Nil(t, err)
+	err = operate(&s, "printIt", nil, &output)
+	require.Nil(t, err)
 	require.Equal(t, "enter a number> : -1.5\n", output.String())
 }
 

@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"math"
 	"os"
 	"strconv"
@@ -13,11 +12,10 @@ import (
 
 // main is the enterypoint of this program
 func main() {
-
 	file, _ := os.Open(os.Args[1])
 	defer file.Close()
 
-	calculateFromFile(file, os.Stdin, os.Stdout)
+	_ = calculateFromFile(file, os.Stdin, os.Stdout)
 }
 
 var operations = map[string]func(*stack, io.Reader, io.Writer) error{
@@ -45,6 +43,7 @@ func operate(s *stack, op string, input io.Reader, output io.Writer) error {
 		err := operation(s, input, output)
 		return err
 	}
+
 	return nil
 }
 
@@ -56,7 +55,7 @@ func readOperator(s *stack, input io.Reader, output io.Writer) error {
 	return nil
 }
 
-func writeOperator(s *stack, input io.Reader, output io.Writer) error {
+func writeOperator(s *stack, _ io.Reader, output io.Writer) error {
 	topValue := pop(s)
 	fmt.Fprintf(output, ": %v\n", topValue)
 	push(s, topValue)
@@ -69,7 +68,7 @@ func powerOperator(s *stack, input io.Reader, output io.Writer) error {
 	res := 1.
 	absExp := int(math.Abs(exponent))
 	for i := 0; i < absExp; i++ {
-		res = res * base
+		res *= base
 	}
 	if exponent < 0 {
 		res = 1. / res
@@ -82,7 +81,7 @@ func powerOperator(s *stack, input io.Reader, output io.Writer) error {
 func summationOperator(s *stack, input io.Reader, output io.Writer) error {
 	var x float64
 	for !isTheStackEmpty(s) {
-		x = x + pop(s)
+		x += pop(s)
 	}
 	push(s, x)
 
@@ -112,6 +111,7 @@ func multipicationOperator(s *stack, input io.Reader, output io.Writer) error {
 func divisionOperator(s *stack, input io.Reader, output io.Writer) error {
 	x := pop(s)
 	y := pop(s)
+
 	if y == 0 {
 		push(s, y)
 		push(s, x)
@@ -207,11 +207,11 @@ func calculate(s string, input io.Reader, output io.Writer) (float64, error) {
 }
 
 func calculateFromFile(reader io.Reader, input io.Reader, output io.Writer) error {
-	fileContent, _ := ioutil.ReadAll(reader)
+	fileContent, _ := io.ReadAll(reader)
 
 	s := string(fileContent)
 	_, err := calculate(s, input, output)
 	return err
 }
 
-var ErrDivisionByZero = errors.New("Cannot divide by zero")
+var ErrDivisionByZero = errors.New("cannot divide by zero")
