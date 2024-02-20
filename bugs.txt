@@ -1,0 +1,9 @@
+1. new line (\n): I tried to use <(echo "1 2 printIt") as argument, so it put my argunemts in a file on memory
+which can be passed as file address to the program. it hase an extra new line in it (\n) which prevent my program
+from calculating the file contenct. I had to give rid of it by passing <(echo -n "1 2 + printIt").
+But that means, I need to handle new lines as a bug.
+
+2. 
+
+
+// when sth new is installed on a terminal and other terminal was open "rehash" is the command to execute.

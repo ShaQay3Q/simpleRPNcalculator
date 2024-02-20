@@ -12,6 +12,7 @@ import (
 
 // main is the enterypoint of this program
 func main() {
+	// in order to run this program it should be given the file path/filename
 	file, _ := os.Open(os.Args[1])
 	defer file.Close()
 
@@ -208,7 +209,9 @@ func calculate(s string, input io.Reader, output io.Writer) (float64, error) {
 
 func calculateFromFile(reader io.Reader, input io.Reader, output io.Writer) error {
 	fileContent, _ := io.ReadAll(reader)
-
+	// prints anything that passed as argument to eat.
+	// it is good for checking for errors!
+	// log.Print(fileContent)
 	s := string(fileContent)
 	_, err := calculate(s, input, output)
 	return err
